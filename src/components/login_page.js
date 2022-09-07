@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { theme } from "../utils/theme";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <Header>MyWallet</Header>
@@ -18,7 +19,13 @@ export default function LoginPage() {
         type="password"
         required
       ></TextInput>
-      <Button>Entrar</Button>
+      <Button
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
+        Entrar
+      </Button>
       <StyledLink to="/register">Primeira vez? Cadastre-se!</StyledLink>
     </Wrapper>
   );
@@ -72,6 +79,7 @@ const Button = styled.button`
   line-height: 23.48px;
 `;
 const StyledLink = styled(Link)`
+  text-decoration: none;
   color: #ffffff;
   font-size: 15px;
   line-height: 17.61px;

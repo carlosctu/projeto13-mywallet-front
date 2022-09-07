@@ -1,38 +1,56 @@
 import styled from "styled-components";
 import { theme } from "../utils/theme";
-import { Link } from "react-router-dom";
-export default function RegisterPage() {
+import { ArrowBackCircleOutline } from "react-ionicons";
+import { useNavigate } from "react-router-dom";
+
+export default function IncomePage() {
+  const navigate = useNavigate();
   return (
     <Wrapper>
-      <Header>MyWallet</Header>
-      <TextInput placeholder="Nome"></TextInput>
-      <TextInput placeholder="E-mail"></TextInput>
-      <TextInput placeholder="Senha"></TextInput>
-      <TextInput placeholder="Confirme sua senha"></TextInput>
-      <Button>Cadastrar</Button>
-      <StyledLink to="/">Já tem uma conta? Entre agora!</StyledLink>
+      <Header>
+        <span>Nova entrada</span>
+
+        <ArrowBackCircleOutline
+          color="#FFFFFF"
+          title="back"
+          height="26px"
+          width="26px"
+          onClick={() => {
+            navigate("/home");
+          }}
+        />
+      </Header>
+      <TextInput placeholder="Valor"></TextInput>
+      <TextInput placeholder="Descrição"></TextInput>
+      <Button>Salvar entrada</Button>
     </Wrapper>
   );
 }
-
 const Wrapper = styled.div`
   background-color: ${theme.background};
   color: ${theme.text};
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding: 25px;
   width: 100vw;
   height: 100vh;
 `;
 const Header = styled.div`
   font-family: "Raleway", sans-serif;
-  width: 147px;
-  height: 50px;
-  font-size: 32px;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 26px;
   font-weight: 400;
   line-height: 50.37px;
   margin-bottom: 24px;
+  svg {
+    display: flex;
+  }
 `;
 const TextInput = styled.input`
   width: 326px;
@@ -61,11 +79,4 @@ const Button = styled.button`
   font-size: 20px;
   font-weight: 700;
   line-height: 23.48px;
-`;
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #ffffff;
-  font-size: 15px;
-  line-height: 17.61px;
-  font-weight: 700;
 `;
