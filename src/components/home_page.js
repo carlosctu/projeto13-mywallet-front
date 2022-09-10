@@ -19,6 +19,7 @@ export default function HomePage() {
           height="30px"
           width="28px"
           onClick={() => {
+            localStorage.removeItem("auth");
             navigate("/");
           }}
         />

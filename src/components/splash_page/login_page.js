@@ -1,31 +1,58 @@
 import styled from "styled-components";
-import { theme } from "../utils/theme";
+import { theme } from "../../utils/theme";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [userLogon, setLogon] = useState({
+    email: "",
+    password: "",
+  });
+
+  function handleForm(event) {
+    setLogon((info) => ({ ...info, [event.target.name]: event.target.value }));
+  }
+  function handleSubmit(event) {
+    axios
+      .post("http://localhost:5000/auth/sign-in", userLogon)
+      .then((response) => {
+        const userAuth = JSON.stringify({
+          token: response.data,
+        });
+        localStorage.setItem("auth", userAuth);
+        navigate("/home");
+      })
+      .catch((err) => {
+        const error = err.response.status;
+        error === 401
+          ? alert("Usuário ou senha inválida!")
+          : alert("Usuário inexistente");
+      });
+    event.preventDefault();
+  }
+
   return (
     <Wrapper>
       <Header>MyWallet</Header>
-      <TextInput
-        placeholder="E-mail"
-        name="email"
-        type="email"
-        required
-      ></TextInput>
-      <TextInput
-        placeholder="Senha"
-        name="password"
-        type="password"
-        required
-      ></TextInput>
-      <Button
-        onClick={() => {
-          navigate("/home");
-        }}
-      >
-        Entrar
-      </Button>
+      <Form onSubmit={handleSubmit}>
+        <TextInput
+          onChange={handleForm}
+          placeholder="E-mail"
+          name="email"
+          type="email"
+          required
+        ></TextInput>
+        <TextInput
+          onChange={handleForm}
+          placeholder="Senha"
+          name="password"
+          type="password"
+          required
+        ></TextInput>
+        <Button>Entrar</Button>
+      </Form>
       <StyledLink to="/register">Primeira vez? Cadastre-se!</StyledLink>
     </Wrapper>
   );
@@ -84,4 +111,8 @@ const StyledLink = styled(Link)`
   font-size: 15px;
   line-height: 17.61px;
   font-weight: 700;
+`;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
 `;
