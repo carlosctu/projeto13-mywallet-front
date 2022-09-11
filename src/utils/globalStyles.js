@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import "../fonts/Raleway-Medium.ttf";
 import { theme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`

@@ -1,15 +1,27 @@
-import styled from "styled-components";
-import { theme } from "../utils/theme";
 import { useNavigate } from "react-router-dom";
 import { MutatingDots } from "react-loader-spinner";
+import { getTransactions, removeSession } from "../../services/api";
+import { useEffect, useState } from "react";
 import {
   LogInOutline,
   AddCircleOutline,
   RemoveCircleOutline,
 } from "react-ionicons";
-import { getTransactions, removeSession } from "../services/api";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../utils/providers/userContext";
+import {
+  Wrapper,
+  Header,
+  Transaction,
+  Transactions,
+  TransactionsButtons,
+  DisplayUserTransactions,
+  TransactionInformation,
+  Date,
+  Description,
+  TransactionValue,
+  Balance,
+  CurrentBalance,
+  Button,
+} from "./styles";
 
 var formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -17,11 +29,13 @@ var formatter = new Intl.NumberFormat("pt-BR", {
 });
 
 export default function HomePage() {
-  const userInfo = useContext(UserContext);
   const [transactions, setTransactions] = useState([]);
   const [userBalance, setBalance] = useState(0);
+  const [name, setName] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    setName(auth.name);
     getTransactions()
       .then((response) => {
         const UserTransactions = response.data;
@@ -52,7 +66,7 @@ export default function HomePage() {
   return (
     <Wrapper>
       <Header>
-        <span>{`Olá, ${userInfo.name}`}</span>
+        <span>{`Olá, ${name}`}</span>
         <LogInOutline
           color="#FFFFFF"
           title="logoff"
@@ -131,135 +145,3 @@ function UserTransactions({ transactions }) {
     </>
   );
 }
-
-const Wrapper = styled.div`
-  background-color: ${theme.background};
-  padding: 25px;
-  color: ${theme.text};
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-`;
-const Header = styled.div`
-  font-family: "Raleway", sans-serif;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 32px;
-  font-weight: 400;
-  line-height: 50.37px;
-  margin-bottom: 24px;
-  span {
-    font-size: 25px;
-    line-height: 28.52px;
-    font-weight: 700;
-  }
-  svg {
-    display: flex;
-  }
-`;
-const Transactions = styled.div`
-  width: 100%;
-  height: 70%;
-  margin-bottom: 26px;
-  background-color: #ffffff;
-  color: #868686;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: scroll;
-  span {
-    width: 180px;
-    height: 46px;
-    text-align: center;
-    font-size: 18px;
-    line-height: 23.48px;
-    font-weight: 300;
-  }
-`;
-const TransactionsButtons = styled.div`
-  width: 100%;
-  height: 114px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  column-gap: 15px;
-`;
-const Button = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  background-color: #a328d6;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 23.48px;
-  cursor: pointer;
-  div {
-    width: 64px;
-    height: 40px;
-    font-size: 17px;
-    line-height: 20px;
-  }
-`;
-const DisplayUserTransactions = styled.div`
-  width: 100%;
-  height: 100%;
-  display: grid;
-  overflow: scroll;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 23px;
-`;
-const Transaction = styled.div`
-  width: 100%;
-  height: 55px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-const TransactionInformation = styled.div`
-  display: flex;
-  column-gap: 15px;
-`;
-const Date = styled.div`
-  color: #c6c6c6;
-`;
-const Description = styled.div`
-  color: #000000;
-`;
-const TransactionValue = styled.div`
-  margin-left: 40px;
-  color: ${(props) => props.color};
-`;
-const Balance = styled.div`
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  z-index: 1;
-  position: absolute;
-  background-color: #7858a6;
-  padding: 0 25px 0 25px;
-  bottom: 0;
-  left: 0;
-  color: #ffffff;
-  font-size: 22px;
-`;
-const CurrentBalance = styled.p`
-  color: #03ac00;
-  font-size: 22px;
-`;

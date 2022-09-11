@@ -1,13 +1,12 @@
-import styled from "styled-components";
-import { theme } from "../../utils/theme";
-import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { signIn } from "../../services/api";
-import { UserContext } from "../../utils/providers/userContext";
+import { ThreeDots } from "react-loader-spinner";
+import { Wrapper, Header, Form, TextInput, Button, StyledLink } from "./styles";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const userInfo = useContext(UserContext);
+  const [disable, setDisable] = useState(false);
   const [userLogon, setLogon] = useState({
     email: "",
     password: "",
@@ -17,17 +16,20 @@ export default function LoginPage() {
     setLogon((info) => ({ ...info, [event.target.name]: event.target.value }));
   }
   function handleSubmit(event) {
+    setDisable(true);
     signIn(userLogon)
       .then((response) => {
         const userAuth = JSON.stringify({
           token: response.data.token,
+          name: response.data.name,
         });
         localStorage.setItem("auth", userAuth);
-        userInfo.setName(response.data.name);
+        setDisable(false);
         navigate("/home");
       })
       .catch((err) => {
         const error = err.response.status;
+        setDisable(false);
         error === 401
           ? alert("Usuário ou senha inválida!")
           : alert("Usuário inexistente");
@@ -44,6 +46,7 @@ export default function LoginPage() {
           placeholder="E-mail"
           name="email"
           type="email"
+          disabled={disable}
           required
         ></TextInput>
         <TextInput
@@ -51,70 +54,18 @@ export default function LoginPage() {
           placeholder="Senha"
           name="password"
           type="password"
+          disabled={disable}
           required
         ></TextInput>
-        <Button>Entrar</Button>
+        <Button>
+          {disable ? (
+            <ThreeDots color="#ffffff" height={65} width={80} />
+          ) : (
+            "Entrar"
+          )}
+        </Button>
       </Form>
       <StyledLink to="/register">Primeira vez? Cadastre-se!</StyledLink>
     </Wrapper>
   );
 }
-
-const Wrapper = styled.div`
-  background-color: ${theme.background};
-  color: ${theme.text};
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-`;
-const Header = styled.div`
-  font-family: "Raleway", sans-serif;
-  width: 147px;
-  height: 50px;
-  font-size: 32px;
-  font-weight: 400;
-  line-height: 50.37px;
-  margin-bottom: 24px;
-`;
-const TextInput = styled.input`
-  width: 326px;
-  height: 58px;
-  color: #000000;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 25px;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 23.48px;
-  margin-bottom: 13px;
-  padding-left: 15px;
-`;
-const Button = styled.button`
-  width: 326px;
-  height: 46px;
-  background-color: #a328d6;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 23.48px;
-`;
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #ffffff;
-  font-size: 15px;
-  line-height: 17.61px;
-  font-weight: 700;
-`;
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
