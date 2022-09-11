@@ -6,9 +6,31 @@ import {
   AddCircleOutline,
   RemoveCircleOutline,
 } from "react-ionicons";
+import { getTransactions, removeSession } from "../services/api";
+import { useEffect } from "react";
 
 export default function HomePage() {
   const navigate = useNavigate();
+  function handleLogout() {
+    removeSession()
+      .then(() => {
+        localStorage.removeItem("auth");
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
+  }
+  function getUserTransactions() {
+    getTransactions()
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => console.log(err));
+  }
+  useEffect(() => {
+    console.log("caiu aqui")
+    const transactions = getUserTransactions();
+    console.log(transactions);
+  }, []);
   return (
     <Wrapper>
       <Header>
@@ -18,10 +40,7 @@ export default function HomePage() {
           title="logoff"
           height="30px"
           width="28px"
-          onClick={() => {
-            localStorage.removeItem("auth");
-            navigate("/");
-          }}
+          onClick={handleLogout}
         />
       </Header>
       <Transactions>
