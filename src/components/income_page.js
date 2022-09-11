@@ -44,12 +44,14 @@ export default function IncomePage() {
         <TextInput
           onChange={handleForm}
           name="value"
+          type="number"
           placeholder="Valor"
           required
         ></TextInput>
         <TextInput
           onChange={handleForm}
           name="description"
+          type="text"
           placeholder="Descrição"
           required
         ></TextInput>

@@ -8,7 +8,8 @@ import {
   RemoveCircleOutline,
 } from "react-ionicons";
 import { getTransactions, removeSession } from "../services/api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../utils/providers/userContext";
 
 var formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -16,6 +17,7 @@ var formatter = new Intl.NumberFormat("pt-BR", {
 });
 
 export default function HomePage() {
+  const userInfo = useContext(UserContext);
   const [transactions, setTransactions] = useState([]);
   const [userBalance, setBalance] = useState(0);
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ export default function HomePage() {
   return (
     <Wrapper>
       <Header>
-        <span>Olá, Fulano</span>
+        <span>{`Olá, ${userInfo.name}`}</span>
         <LogInOutline
           color="#FFFFFF"
           title="logoff"
@@ -250,7 +252,7 @@ const Balance = styled.div`
   width: 100%;
   z-index: 1;
   position: absolute;
-  background-color: #7858A6;
+  background-color: #7858a6;
   padding: 0 25px 0 25px;
   bottom: 0;
   left: 0;
@@ -258,6 +260,6 @@ const Balance = styled.div`
   font-size: 22px;
 `;
 const CurrentBalance = styled.p`
-  color: #03AC00;
+  color: #03ac00;
   font-size: 22px;
 `;

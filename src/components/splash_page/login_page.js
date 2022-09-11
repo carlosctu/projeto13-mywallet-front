@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import { theme } from "../../utils/theme";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import axios from "axios";
+import { useContext, useState } from "react";
 import { signIn } from "../../services/api";
+import { UserContext } from "../../utils/providers/userContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const userInfo = useContext(UserContext);
   const [userLogon, setLogon] = useState({
     email: "",
     password: "",
@@ -19,9 +20,10 @@ export default function LoginPage() {
     signIn(userLogon)
       .then((response) => {
         const userAuth = JSON.stringify({
-          token: response.data,
+          token: response.data.token,
         });
         localStorage.setItem("auth", userAuth);
+        userInfo.setName(response.data.name);
         navigate("/home");
       })
       .catch((err) => {
