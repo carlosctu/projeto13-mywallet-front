@@ -3,6 +3,7 @@ import { theme } from "../../utils/theme";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { signUp } from "../../services/api";
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [registerInfo, setInfo] = useState({
@@ -25,8 +26,7 @@ export default function RegisterPage() {
     }
     const { name, email, password } = registerInfo;
     const userInfo = { name, email, password };
-    axios
-      .post("http://localhost:5000/auth/sign-up", userInfo)
+    signUp(userInfo)
       .then(() => {
         alert("Usuário cadastrado com sucesso!");
         navigate("/");

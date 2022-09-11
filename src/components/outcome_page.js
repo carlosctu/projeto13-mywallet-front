@@ -2,9 +2,29 @@ import styled from "styled-components";
 import { theme } from "../utils/theme";
 import { ArrowBackCircleOutline } from "react-ionicons";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { newTransactionOutcome } from "../services/api";
 
 export default function OutcomePage() {
   const navigate = useNavigate();
+  const [outcomeInfo, setOucome] = useState({
+    description: "",
+    value: 0,
+  });
+  function handleSubmit(event) {
+    newTransactionOutcome(outcomeInfo)
+      .then(() => {
+        alert("Saida cadastrada com sucesso!");
+      })
+      .catch((err) => console.log(err));
+    event.preventDefault();
+  }
+  function handleForm(event) {
+    setOucome((outcome) => ({
+      ...outcome,
+      [event.target.name]: event.target.value,
+    }));
+  }
   return (
     <Wrapper>
       <Header>
@@ -20,9 +40,21 @@ export default function OutcomePage() {
           }}
         />
       </Header>
-      <TextInput placeholder="Valor"></TextInput>
-      <TextInput placeholder="Descrição"></TextInput>
-      <Button>Salvar saída</Button>
+      <Form onSubmit={handleSubmit}>
+        <TextInput
+          onChange={handleForm}
+          name="value"
+          placeholder="Valor"
+          required
+        ></TextInput>
+        <TextInput
+          onChange={handleForm}
+          name="description"
+          placeholder="Descrição"
+          required
+        ></TextInput>
+        <Button>Salvar saída</Button>
+      </Form>
     </Wrapper>
   );
 }
@@ -51,6 +83,10 @@ const Header = styled.div`
   svg {
     display: flex;
   }
+`;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
 `;
 const TextInput = styled.input`
   width: 326px;

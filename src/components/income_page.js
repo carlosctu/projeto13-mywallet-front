@@ -2,9 +2,29 @@ import styled from "styled-components";
 import { theme } from "../utils/theme";
 import { ArrowBackCircleOutline } from "react-ionicons";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { newTransactionIncome } from "../services/api";
 
 export default function IncomePage() {
   const navigate = useNavigate();
+  const [incomeInfo, setIncome] = useState({
+    description: "",
+    value: 0,
+  });
+  function handleSubmit(event) {
+    newTransactionIncome(incomeInfo)
+      .then(() => {
+        alert("Entrada cadastrada com sucesso!");
+      })
+      .catch((err) => console.log(err));
+    event.preventDefault();
+  }
+  function handleForm(event) {
+    setIncome((income) => ({
+      ...income,
+      [event.target.name]: event.target.value,
+    }));
+  }
   return (
     <Wrapper>
       <Header>
@@ -20,9 +40,21 @@ export default function IncomePage() {
           }}
         />
       </Header>
-      <TextInput placeholder="Valor"></TextInput>
-      <TextInput placeholder="Descrição"></TextInput>
-      <Button>Salvar entrada</Button>
+      <Form onSubmit={handleSubmit}>
+        <TextInput
+          onChange={handleForm}
+          name="value"
+          placeholder="Valor"
+          required
+        ></TextInput>
+        <TextInput
+          onChange={handleForm}
+          name="description"
+          placeholder="Descrição"
+          required
+        ></TextInput>
+        <Button>Salvar entrada</Button>
+      </Form>
     </Wrapper>
   );
 }
@@ -51,6 +83,10 @@ const Header = styled.div`
   svg {
     display: flex;
   }
+`;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
 `;
 const TextInput = styled.input`
   width: 326px;

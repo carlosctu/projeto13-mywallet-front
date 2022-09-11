@@ -17,7 +17,7 @@ var formatter = new Intl.NumberFormat("pt-BR", {
 
 export default function HomePage() {
   const [transactions, setTransactions] = useState([]);
-  const [balance, setBalance] = useState(0);
+  const [userBalance, setBalance] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
     getTransactions()
@@ -28,12 +28,10 @@ export default function HomePage() {
           UserTransactions.map((transaction) => {
             return transaction.type === "income"
               ? setBalance(
-                  (userBalance) =>
-                    (userBalance += parseFloat(transaction.value))
+                  (balanace) => (balanace += parseFloat(transaction.value))
                 )
               : setBalance(
-                  (userBalance) =>
-                    (userBalance -= parseFloat(transaction.value))
+                  (balanace) => (balanace -= parseFloat(transaction.value))
                 );
           });
         }
@@ -69,7 +67,7 @@ export default function HomePage() {
         )}
         <Balance>
           <p>Saldo</p>
-          <p>{formatter.format(balance)}</p>
+          <CurrentBalance>{formatter.format(userBalance)}</CurrentBalance>
         </Balance>
       </Transactions>
       <TransactionsButtons>
@@ -169,10 +167,10 @@ const Transactions = styled.div`
   background-color: #ffffff;
   color: #868686;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: scroll;
   span {
     width: 180px;
     height: 46px;
@@ -217,7 +215,8 @@ const Button = styled.div`
 const DisplayUserTransactions = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
+  display: grid;
+  overflow: scroll;
   flex-direction: column;
   align-items: flex-start;
   padding: 23px;
@@ -251,10 +250,14 @@ const Balance = styled.div`
   width: 100%;
   z-index: 1;
   position: absolute;
-  background-color: #a328d6;
+  background-color: #7858A6;
   padding: 0 25px 0 25px;
   bottom: 0;
   left: 0;
-  color: #000000;
+  color: #ffffff;
+  font-size: 22px;
+`;
+const CurrentBalance = styled.p`
+  color: #03AC00;
   font-size: 22px;
 `;

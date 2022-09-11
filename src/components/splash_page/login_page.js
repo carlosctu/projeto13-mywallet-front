@@ -3,6 +3,7 @@ import { theme } from "../../utils/theme";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { signIn } from "../../services/api";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -15,8 +16,7 @@ export default function LoginPage() {
     setLogon((info) => ({ ...info, [event.target.name]: event.target.value }));
   }
   function handleSubmit(event) {
-    axios
-      .post("http://localhost:5000/auth/sign-in", userLogon)
+    signIn(userLogon)
       .then((response) => {
         const userAuth = JSON.stringify({
           token: response.data,

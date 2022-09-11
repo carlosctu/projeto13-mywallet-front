@@ -23,9 +23,26 @@ function getTransactions() {
   const promise = axios.get(`${baseURL}/transactions`, config);
   return promise;
 }
+function newTransactionIncome(body) {
+  const config = createHeaders();
+  const promise = axios.post(`${baseURL}/transactions/incomes`, body, config);
+  return promise;
+}
+function newTransactionOutcome(body) {
+  const config = createHeaders();
+  const promise = axios.post(`${baseURL}/transactions/outcomes`, body, config);
+  return promise;
+}
 function removeSession() {
   const config = createHeaders();
   const promise = axios.delete(`${baseURL}/session/log-out`, config);
   return promise;
 }
-export { signUp, signIn, getTransactions, removeSession };
+export {
+  signUp,
+  signIn,
+  getTransactions,
+  newTransactionIncome,
+  newTransactionOutcome,
+  removeSession,
+};
