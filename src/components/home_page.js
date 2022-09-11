@@ -1,16 +1,45 @@
 import styled from "styled-components";
 import { theme } from "../utils/theme";
 import { useNavigate } from "react-router-dom";
+import { MutatingDots } from "react-loader-spinner";
 import {
   LogInOutline,
   AddCircleOutline,
   RemoveCircleOutline,
 } from "react-ionicons";
 import { getTransactions, removeSession } from "../services/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+var formatter = new Intl.NumberFormat("pt-BR", {
+  style: "currency",
+  currency: "BRL",
+});
 
 export default function HomePage() {
+  const [transactions, setTransactions] = useState([]);
+  const [balance, setBalance] = useState(0);
   const navigate = useNavigate();
+  useEffect(() => {
+    getTransactions()
+      .then((response) => {
+        const UserTransactions = response.data;
+        setTransactions(UserTransactions);
+        if (UserTransactions !== 0) {
+          UserTransactions.map((transaction) => {
+            return transaction.type === "income"
+              ? setBalance(
+                  (userBalance) =>
+                    (userBalance += parseFloat(transaction.value))
+                )
+              : setBalance(
+                  (userBalance) =>
+                    (userBalance -= parseFloat(transaction.value))
+                );
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   function handleLogout() {
     removeSession()
       .then(() => {
@@ -19,18 +48,7 @@ export default function HomePage() {
       })
       .catch((err) => console.log(err));
   }
-  function getUserTransactions() {
-    getTransactions()
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => console.log(err));
-  }
-  useEffect(() => {
-    console.log("caiu aqui")
-    const transactions = getUserTransactions();
-    console.log(transactions);
-  }, []);
+
   return (
     <Wrapper>
       <Header>
@@ -44,7 +62,15 @@ export default function HomePage() {
         />
       </Header>
       <Transactions>
-        <span>Não há registros de entrada ou saída</span>
+        {transactions ? (
+          <UserTransactions transactions={transactions} />
+        ) : (
+          <MutatingDots height={80} width={80} />
+        )}
+        <Balance>
+          <p>Saldo</p>
+          <p>{formatter.format(balance)}</p>
+        </Balance>
       </Transactions>
       <TransactionsButtons>
         <Button
@@ -77,6 +103,35 @@ export default function HomePage() {
     </Wrapper>
   );
 }
+
+function UserTransactions({ transactions }) {
+  return (
+    <>
+      {transactions.length > 0 ? (
+        <DisplayUserTransactions>
+          {transactions.map((transaction, index) => {
+            return (
+              <Transaction key={index}>
+                <TransactionInformation>
+                  <Date>{transaction.date}</Date>
+                  <Description>{transaction.description}</Description>
+                </TransactionInformation>
+                <TransactionValue
+                  color={transaction.type === "income" ? "#03AC00" : "#C70000"}
+                >
+                  {formatter.format(transaction.value)}
+                </TransactionValue>
+              </Transaction>
+            );
+          })}
+        </DisplayUserTransactions>
+      ) : (
+        <span>Não há registros de entrada ou saída</span>
+      )}
+    </>
+  );
+}
+
 const Wrapper = styled.div`
   background-color: ${theme.background};
   padding: 25px;
@@ -114,8 +169,10 @@ const Transactions = styled.div`
   background-color: #ffffff;
   color: #868686;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
   span {
     width: 180px;
     height: 46px;
@@ -156,4 +213,48 @@ const Button = styled.div`
     font-size: 17px;
     line-height: 20px;
   }
+`;
+const DisplayUserTransactions = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 23px;
+`;
+const Transaction = styled.div`
+  width: 100%;
+  height: 55px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+const TransactionInformation = styled.div`
+  display: flex;
+  column-gap: 15px;
+`;
+const Date = styled.div`
+  color: #c6c6c6;
+`;
+const Description = styled.div`
+  color: #000000;
+`;
+const TransactionValue = styled.div`
+  margin-left: 40px;
+  color: ${(props) => props.color};
+`;
+const Balance = styled.div`
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 1;
+  position: absolute;
+  background-color: #a328d6;
+  padding: 0 25px 0 25px;
+  bottom: 0;
+  left: 0;
+  color: #000000;
+  font-size: 22px;
 `;
