@@ -37,4 +37,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-//<Route path="/register" element={<RegisterPage />} />

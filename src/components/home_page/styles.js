@@ -90,7 +90,7 @@ export const DisplayUserTransactions = styled.div`
   display: grid;
   overflow: scroll;
   flex-direction: column;
-  align-items: flex-start;
+  align-content: flex-start;
   padding: 23px;
 `;
 export const Transaction = styled.div`
@@ -111,8 +111,12 @@ export const Description = styled.div`
   color: #000000;
 `;
 export const TransactionValue = styled.div`
+  display: flex;
+  width: 100px;
   margin-left: 40px;
-  color: ${(props) => props.color};
+  p {
+    color: ${(props) => props.color};
+  }
 `;
 export const Balance = styled.div`
   height: 50px;

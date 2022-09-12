@@ -1,10 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { MutatingDots } from "react-loader-spinner";
-import { getTransactions, removeSession } from "../../services/api";
+import {
+  deleteTransaction,
+  getTransactions,
+  removeSession,
+} from "../../services/api";
 import { useEffect, useState } from "react";
 import {
   LogInOutline,
   AddCircleOutline,
+  CloseOutline,
   RemoveCircleOutline,
 } from "react-ionicons";
 import {
@@ -31,11 +36,13 @@ var formatter = new Intl.NumberFormat("pt-BR", {
 export default function HomePage() {
   const [transactions, setTransactions] = useState([]);
   const [userBalance, setBalance] = useState(0);
+  const [render, setRender] = useState(false);
   const [name, setName] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     setName(auth.name);
+    setBalance(0);
     getTransactions()
       .then((response) => {
         const UserTransactions = response.data;
@@ -53,7 +60,7 @@ export default function HomePage() {
         }
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [render]);
   function handleLogout() {
     removeSession()
       .then(() => {
@@ -77,7 +84,11 @@ export default function HomePage() {
       </Header>
       <Transactions>
         {transactions ? (
-          <UserTransactions transactions={transactions} />
+          <UserTransactions
+            setBalance={setBalance}
+            setRender={setRender}
+            transactions={transactions}
+          />
         ) : (
           <MutatingDots height={80} width={80} />
         )}
@@ -118,7 +129,7 @@ export default function HomePage() {
   );
 }
 
-function UserTransactions({ transactions }) {
+function UserTransactions({ setBalance, setRender, transactions }) {
   return (
     <>
       {transactions.length > 0 ? (
@@ -133,7 +144,25 @@ function UserTransactions({ transactions }) {
                 <TransactionValue
                   color={transaction.type === "income" ? "#03AC00" : "#C70000"}
                 >
-                  {formatter.format(transaction.value)}
+                  <p>{formatter.format(transaction.value)}</p>
+                  <CloseOutline
+                    onClick={() => {
+                      const confirm = window.confirm(
+                        `Deseja deletar a transação ${transaction.description}?`
+                      );
+                      if (confirm) {
+                        deleteTransaction(transaction._id)
+                          .then(() => {
+                            setBalance(0);
+                            setRender((oldValue) => !oldValue);
+                          })
+                          .catch((err) => console.log(err));
+                      }
+                    }}
+                    color={"#00000"}
+                    height="20px"
+                    width="20px"
+                  />
                 </TransactionValue>
               </Transaction>
             );
