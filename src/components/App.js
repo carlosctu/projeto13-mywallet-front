@@ -7,6 +7,7 @@ import IncomePage from "./transactions_page/income_page";
 import OutcomePage from "./transactions_page/outcome_page";
 import ProtectedRoute from "../utils/routes/protected_route";
 import HomePage from "./home_page/home_page";
+import PublicRoute from "../utils/routes/public_route";
 
 export default function App() {
   return (
@@ -30,9 +31,30 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/income" element={<IncomePage />} />
-        <Route path="/outcome" element={<OutcomePage />} />
+        <Route
+          path="/home"
+          element={
+            <PublicRoute>
+              <HomePage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/income"
+          element={
+            <PublicRoute>
+              <IncomePage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/outcome"
+          element={
+            <PublicRoute>
+              <OutcomePage />
+            </PublicRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
