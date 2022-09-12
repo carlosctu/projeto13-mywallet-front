@@ -8,54 +8,56 @@ import OutcomePage from "./transactions_page/outcome_page";
 import ProtectedRoute from "../utils/routes/protected_route";
 import HomePage from "./home_page/home_page";
 import PublicRoute from "../utils/routes/public_route";
+import { AnimatePresence } from "framer-motion";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <GlobalStyle />
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <LoginPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <ProtectedRoute>
-              <RegisterPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            <PublicRoute>
-              <HomePage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/income"
-          element={
-            <PublicRoute>
-              <IncomePage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/outcome"
-          element={
-            <PublicRoute>
-              <OutcomePage />
-            </PublicRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <AnimatePresence exitBeforeEnter>
+      <BrowserRouter>
+        <GlobalStyle />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <LoginPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute>
+                <RegisterPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PublicRoute>
+                <HomePage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/income"
+            element={
+              <PublicRoute>
+                <IncomePage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/outcome"
+            element={
+              <PublicRoute>
+                <OutcomePage />
+              </PublicRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AnimatePresence>
   );
 }

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { signUp } from "../../services/api";
 import { Wrapper, Header, Form, TextInput, Button, StyledLink } from "./styles";
-
+import { motion } from "framer-motion";
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [registerInfo, setInfo] = useState({
@@ -38,40 +38,46 @@ export default function RegisterPage() {
     event.preventDefault();
   }
   return (
-    <Wrapper>
-      <Header>MyWallet</Header>
-      <Form onSubmit={handleSubmit}>
-        <TextInput
-          onChange={handleForm}
-          placeholder="Nome"
-          name="name"
-          type="name"
-          required
-        ></TextInput>
-        <TextInput
-          onChange={handleForm}
-          placeholder="E-mail"
-          name="email"
-          type="email"
-          required
-        ></TextInput>
-        <TextInput
-          onChange={handleForm}
-          placeholder="Senha"
-          name="password"
-          type="password"
-          required
-        ></TextInput>
-        <TextInput
-          onChange={handleForm}
-          placeholder="Confirme sua senha"
-          name="confirmPassword"
-          type="password"
-          required
-        ></TextInput>
-        <Button>Cadastrar</Button>
-      </Form>
-      <StyledLink to="/">Já tem uma conta? Entre agora!</StyledLink>
-    </Wrapper>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <Header>MyWallet</Header>
+        <Form onSubmit={handleSubmit}>
+          <TextInput
+            onChange={handleForm}
+            placeholder="Nome"
+            name="name"
+            type="name"
+            required
+          ></TextInput>
+          <TextInput
+            onChange={handleForm}
+            placeholder="E-mail"
+            name="email"
+            type="email"
+            required
+          ></TextInput>
+          <TextInput
+            onChange={handleForm}
+            placeholder="Senha"
+            name="password"
+            type="password"
+            required
+          ></TextInput>
+          <TextInput
+            onChange={handleForm}
+            placeholder="Confirme sua senha"
+            name="confirmPassword"
+            type="password"
+            required
+          ></TextInput>
+          <Button>Cadastrar</Button>
+        </Form>
+        <StyledLink to="/">Já tem uma conta? Entre agora!</StyledLink>
+      </Wrapper>
+    </motion.div>
   );
 }

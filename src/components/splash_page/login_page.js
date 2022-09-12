@@ -3,6 +3,7 @@ import { useState } from "react";
 import { signIn } from "../../services/api";
 import { ThreeDots } from "react-loader-spinner";
 import { Wrapper, Header, Form, TextInput, Button, StyledLink } from "./styles";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function LoginPage() {
           name: response.data.name,
         });
         localStorage.setItem("auth", userAuth);
+
         setDisable(false);
         navigate("/home");
       })
@@ -38,34 +40,41 @@ export default function LoginPage() {
   }
 
   return (
-    <Wrapper>
-      <Header>MyWallet</Header>
-      <Form onSubmit={handleSubmit}>
-        <TextInput
-          onChange={handleForm}
-          placeholder="E-mail"
-          name="email"
-          type="email"
-          disabled={disable}
-          required
-        ></TextInput>
-        <TextInput
-          onChange={handleForm}
-          placeholder="Senha"
-          name="password"
-          type="password"
-          disabled={disable}
-          required
-        ></TextInput>
-        <Button>
-          {disable ? (
-            <ThreeDots color="#ffffff" height={65} width={80} />
-          ) : (
-            "Entrar"
-          )}
-        </Button>
-      </Form>
-      <StyledLink to="/register">Primeira vez? Cadastre-se!</StyledLink>
-    </Wrapper>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Wrapper>
+        <Header>MyWallet</Header>
+        <Form onSubmit={handleSubmit}>
+          <TextInput
+            onChange={handleForm}
+            placeholder="E-mail"
+            name="email"
+            type="email"
+            disabled={disable}
+            required
+          ></TextInput>
+          <TextInput
+            onChange={handleForm}
+            placeholder="Senha"
+            name="password"
+            type="password"
+            disabled={disable}
+            required
+          ></TextInput>
+          <Button>
+            {disable ? (
+              <ThreeDots color="#ffffff" height={65} width={80} />
+            ) : (
+              "Entrar"
+            )}
+          </Button>
+        </Form>
+        <StyledLink to="/register">Primeira vez? Cadastre-se!</StyledLink>
+      </Wrapper>
+      ;
+    </motion.div>
   );
 }
