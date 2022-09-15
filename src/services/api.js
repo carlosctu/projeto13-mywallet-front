@@ -11,7 +11,7 @@ function createHeaders() {
 }
 
 function signUp(body) {
-  const promise = axios.post(`${baseURL}/auth/sign-uup`, body);
+  const promise = axios.post(`${baseURL}/auth/sign-up`, body);
   return promise;
 }
 function signIn(body) {
